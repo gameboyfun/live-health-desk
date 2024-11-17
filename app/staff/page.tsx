@@ -12,7 +12,6 @@ export default function Staff() {
     const dbRef = ref(database, 'data')
     const unsubscribe = onValue(dbRef, (snapshot) => {
       const fetchedData = snapshot.val()
-      console.log(fetchedData) // Logs data from Firebase
       setData(fetchedData)
     })
 

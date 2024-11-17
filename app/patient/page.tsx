@@ -101,7 +101,6 @@ export default function Patient() {
   useEffect(() => {
     setDB(formValues)
   }, [formValues])
-  console.log('FIREBASE_DATABASE_URL:', process.env.FIREBASE_DATABASE_URL);
 
   return (
     <form onSubmit={handleSubmit((data) => setDB(data))}>
