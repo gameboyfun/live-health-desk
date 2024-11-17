@@ -104,10 +104,6 @@ export default function Staff() {
               <h2 className='m-0'>Emergency Contact:</h2>
               <div>{emergencyContactName || '-'}</div>
             </article>
-            <article className='prose text-white'>
-              <h2 className='m-0'>status:</h2>
-              <div>hjk</div>
-            </article>
           </CardBody>
         </Card>
       </div>
