@@ -6,8 +6,8 @@ const server = createServer()
 
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000', 'https://live-health-desk.vercel.app'],
-    credentials: true,
+    origin: '*',
+    // credentials: true,
     methods: ['GET', 'POST']
   }
 })
