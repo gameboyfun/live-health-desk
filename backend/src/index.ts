@@ -1,9 +1,7 @@
 const express = require('express')
-const { Server } = require('socket.io')
+import { Server, Socket } from 'socket.io'
 import { createServer } from 'http'
 
-// Import the type for the socket
-import { Socket } from 'socket.io'
 const server = createServer()
 
 const io = new Server(server, {
