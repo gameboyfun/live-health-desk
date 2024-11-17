@@ -1,10 +1,11 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date'
 import axios from 'axios'
 import { Controller, useForm } from 'react-hook-form'
-import { io } from 'socket.io-client'
+import { database } from '../../firebaseConfig'
+import { ref, set } from 'firebase/database'
 
 import {
   Select,
@@ -23,16 +24,6 @@ import type { Religions } from '../api/religions/types'
 import type { Form } from './types'
 
 export default function Patient() {
-  const socket = useMemo(
-    () =>
-      io('http://localhost:4000', {
-        transports: ['websocket', 'polling']
-      }),
-    []
-  )
-  socket.on('connect', () => {
-    console.log('i am connected')
-  })
   const {
     control,
     register,
@@ -89,6 +80,18 @@ export default function Patient() {
     }
   }
 
+  const setDB = (formValues: Form) => {
+    if (Object.values(formValues).some((value) => value)) {
+      const birthDate = formValues.birthDate ?? ''
+      const gender = formValues.gender ?? ''
+      const language = formValues.language ?? ''
+      const nationality = formValues.nationality ?? ''
+
+      const dataRef = ref(database, 'data')
+      set(dataRef, { ...formValues, birthDate, gender, language, nationality })
+    }
+  }
+
   useEffect(() => {
     fetchLanguages()
     fetchNationalities()
@@ -96,11 +99,12 @@ export default function Patient() {
   }, [])
 
   useEffect(() => {
-    socket.emit('message', JSON.stringify(formValues))
-  }, [formValues, socket])
+    setDB(formValues)
+  }, [formValues])
+  console.log('FIREBASE_DATABASE_URL:', process.env.FIREBASE_DATABASE_URL);
 
   return (
-    <form onSubmit={handleSubmit((data) => socket.emit('message', JSON.stringify(data)))}>
+    <form onSubmit={handleSubmit((data) => setDB(data))}>
       <div className='min-h-screen p-8 flex flex-col gap-4'>
         <article className='prose self-center'>
           <h1 className='text-white'>Patient Form</h1>

@@ -1,24 +1,24 @@
 'use client'
 import { Card, CardBody } from '@nextui-org/react'
-import React, { useMemo, useState } from 'react'
-import { io } from 'socket.io-client'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Form } from '../patient/types'
+import { onValue, ref } from 'firebase/database'
+import { database } from '../../firebaseConfig'
 
 export default function Staff() {
-  const socket = useMemo(
-    () =>
-      io('http://localhost:4000', {
-        transports: ['websocket', 'polling']
-      }),
-    []
-  )
-  socket.on('connect', () => {
-    console.log('i am connected')
-  })
-  socket.on('message', (message) => {
-    setData(JSON.parse(message))
-  })
   const [data, setData] = useState<Form>()
+
+  useEffect(() => {
+    const dbRef = ref(database, 'data')
+    const unsubscribe = onValue(dbRef, (snapshot) => {
+      const fetchedData = snapshot.val()
+      console.log(fetchedData) // Logs data from Firebase
+      setData(fetchedData)
+    })
+
+    // Cleanup listener when the component unmounts
+    return () => unsubscribe()
+  }, [])
 
   const {
     firstName,
