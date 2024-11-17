@@ -1,5 +1,5 @@
 const express = require('express')
-import { Server, Socket } from 'socket.io'
+import { Server } from 'socket.io'
 import { createServer } from 'http'
 
 const server = createServer()
@@ -12,7 +12,7 @@ const io = new Server(server, {
   }
 })
 
-io.on('connection', (socket: Socket) => {
+io.on('connection', (socket) => {
   console.log(`Client connected: ${socket.id}`)
 
   // Emit a welcome message to the connected client
