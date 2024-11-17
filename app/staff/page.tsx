@@ -5,7 +5,13 @@ import { io } from 'socket.io-client'
 import { Form } from '../patient/types'
 
 export default function Staff() {
-  const socket = useMemo(() => io('http://localhost:4000'), [])
+  const socket = useMemo(
+    () =>
+      io('http://localhost:4000', {
+        transports: ['websocket', 'polling']
+      }),
+    []
+  )
   socket.on('connect', () => {
     console.log('i am connected')
   })

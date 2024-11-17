@@ -23,7 +23,13 @@ import type { Religions } from '../api/religions/types'
 import type { Form } from './types'
 
 export default function Patient() {
-  const socket = useMemo(() => io('http://localhost:4000'), [])
+  const socket = useMemo(
+    () =>
+      io('http://localhost:4000', {
+        transports: ['websocket', 'polling']
+      }),
+    []
+  )
   socket.on('connect', () => {
     console.log('i am connected')
   })
