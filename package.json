@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"next dev  --turbo\" \"npm run dev --prefix backend\"",
-    "build": "next build",
-    "start": "next start",
+    "build": "next build && npm run build --prefix backend",
+    "start": "next start && npm run start --prefix backend",
     "lint": "next lint"
   },
   "dependencies": {
