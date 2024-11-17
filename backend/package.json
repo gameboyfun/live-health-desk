@@ -5,9 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsc -b && nodemon dist/index.js",
-    "build": "tsc -b",
-    "watch": "tsc -w"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
