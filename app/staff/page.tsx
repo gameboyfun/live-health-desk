@@ -1,55 +1,10 @@
 'use client'
 import { Card, CardBody } from '@nextui-org/react'
-import React, { useEffect, useMemo, useState } from 'react'
-import { Form } from '../patient/types'
-import { onValue, ref } from 'firebase/database'
-import { database } from '../../firebaseConfig'
+import { StaffField } from '../components/staff-field'
+import useLogic from './logic'
 
 export default function Staff() {
-  const [data, setData] = useState<Form>()
-
-  useEffect(() => {
-    const dbRef = ref(database, 'data')
-    const unsubscribe = onValue(dbRef, (snapshot) => {
-      const fetchedData = snapshot.val()
-      setData(fetchedData)
-    })
-
-    // Cleanup listener when the component unmounts
-    return () => unsubscribe()
-  }, [])
-
-  const {
-    firstName,
-    middleName,
-    lastName,
-    birthDate,
-    gender,
-    phoneNumber,
-    email,
-    language,
-    nationality,
-    religion,
-    address,
-    emergencyContactName
-  } = useMemo(() => {
-    return (
-      data ?? {
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        birthDate: '',
-        gender: '',
-        phoneNumber: '',
-        email: '',
-        language: '',
-        nationality: '',
-        religion: '',
-        address: '',
-        emergencyContactName: ''
-      }
-    )
-  }, [data])
+  const { field } = useLogic()
 
   return (
     <div className='min-h-screen p-8 flex flex-col gap-4'>
@@ -60,55 +15,16 @@ export default function Staff() {
         <Card className='bg-primary-500'>
           <CardBody className='grid grid-cols-1 gap-4 w-full self-center p-8'>
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 w-full self-center'>
-              <article className='prose text-white'>
-                <h2 className='m-0'>First Name:</h2>
-                <div>{firstName || '-'}</div>
-              </article>
-              <article className='prose text-white'>
-                <h2 className='m-0'>Middle Name:</h2>
-                <div>{middleName || '-'}</div>
-              </article>
-              <article className='prose text-white'>
-                <h2 className='m-0'>Last Name:</h2>
-                <div>{lastName || '-'}</div>
-              </article>
-              <article className='prose text-white'>
-                <h2 className='m-0'>Date of Birth:</h2>
-                <div>{birthDate || '-'}</div>
-              </article>
-              <article className='prose text-white'>
-                <h2 className='m-0'>Gender:</h2>
-                <div>{gender || '-'}</div>
-              </article>
-              <article className='prose text-white'>
-                <h2 className='m-0'>Phone Number:</h2>
-                <div>{phoneNumber || '-'}</div>
-              </article>
-              <article className='prose text-white'>
-                <h2 className='m-0'>Email:</h2>
-                <div>{email || '-'}</div>
-              </article>
-              <article className='prose text-white'>
-                <h2 className='m-0'>Preferred Language:</h2>
-                <div>{language || '-'}</div>
-              </article>
-              <article className='prose text-white'>
-                <h2 className='m-0'>Nationality:</h2>
-                <div>{nationality || '-'}</div>
-              </article>
-              <article className='prose text-white'>
-                <h2 className='m-0'>Religion:</h2>
-                <div>{religion || '-'}</div>
-              </article>
+              {field.map(({ title, value, color, fullWidth }, idx) => (
+                <StaffField
+                  key={idx}
+                  title={title}
+                  value={value}
+                  color={color}
+                  fullWidth={fullWidth}
+                />
+              ))}
             </div>
-            <article className='prose text-white'>
-              <h2 className='m-0'>Address:</h2>
-              <div>{address || '-'}</div>
-            </article>
-            <article className='prose text-white'>
-              <h2 className='m-0'>Emergency Contact:</h2>
-              <div>{emergencyContactName || '-'}</div>
-            </article>
           </CardBody>
         </Card>
       </div>

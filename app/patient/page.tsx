@@ -1,11 +1,7 @@
 'use client'
-import { useEffect, useState } from 'react'
-
 import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date'
-import axios from 'axios'
-import { Controller, useForm } from 'react-hook-form'
-import { database } from '../../firebaseConfig'
-import { ref, set } from 'firebase/database'
+import { Controller } from 'react-hook-form'
+import useLogic from './logic'
 
 import {
   Select,
@@ -18,92 +14,22 @@ import {
   Button
 } from '@nextui-org/react'
 
-import type { Language } from '../api/languages/types'
-import type { Nationalities } from '../api/nationalities/types'
-import type { Religions } from '../api/religions/types'
-import type { Form } from './types'
-
 export default function Patient() {
   const {
     control,
     register,
     setValue,
     handleSubmit,
-    watch,
-    formState: { errors }
-  } = useForm<Form>()
-  const formValues = watch()
-  const genders = [
-    {
-      key: 'Male',
-      label: 'Male'
-    },
-    {
-      key: 'Female',
-      label: 'Female'
-    }
-  ]
-  const [languages, setLanguages] = useState<Language[]>([])
-  const [nationalities, setNationalities] = useState<Nationalities[]>([])
-  const [religions, setReligions] = useState<Religions[]>([])
-
-  const fetchLanguages = async () => {
-    try {
-      const response = await axios.get('/api/languages')
-      if (response) {
-        setLanguages(response.data)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const fetchNationalities = async () => {
-    try {
-      const response = await axios.get('/api/nationalities')
-      if (response) {
-        setNationalities(response.data)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const fetchReligions = async () => {
-    try {
-      const response = await axios.get('/api/religions')
-      if (response) {
-        setReligions(response.data)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const setDB = (formValues: Form) => {
-    if (Object.values(formValues).some((value) => value)) {
-      const birthDate = formValues.birthDate ?? ''
-      const gender = formValues.gender ?? ''
-      const language = formValues.language ?? ''
-      const nationality = formValues.nationality ?? ''
-
-      const dataRef = ref(database, 'data')
-      set(dataRef, { ...formValues, birthDate, gender, language, nationality })
-    }
-  }
-
-  useEffect(() => {
-    fetchLanguages()
-    fetchNationalities()
-    fetchReligions()
-  }, [])
-
-  useEffect(() => {
-    setDB(formValues)
-  }, [formValues])
-
+    errors,
+    genders,
+    languages,
+    nationalities,
+    religions,
+    handleSubmitToDB
+  } = useLogic()
+  
   return (
-    <form onSubmit={handleSubmit((data) => setDB(data))}>
+    <form onSubmit={handleSubmit((data) => handleSubmitToDB(data))}>
       <div className='min-h-screen p-8 flex flex-col gap-4'>
         <article className='prose self-center'>
           <h1 className='text-white'>Patient Form</h1>
