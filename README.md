@@ -27,7 +27,7 @@ Ensure that you have the following installed:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/patient-form.git
+   git clone https://github.com/gameboyfun/live-health-desk.git
    cd patient-form
 
 2. Install the dependencies:
